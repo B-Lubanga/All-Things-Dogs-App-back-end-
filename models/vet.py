@@ -11,5 +11,5 @@ class Vet(Base):
     contact = Column(String)
 
     dogs = relationship('Dog', back_populates='vet')
-    appointments = relationship('Appointment', back_populates='vet')
+    appointments = relationship('Appointment', back_populates='vet') 
 

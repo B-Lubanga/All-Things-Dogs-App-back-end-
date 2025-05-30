@@ -1,4 +1,4 @@
-from database import Base, engine, session
+from database import create_tables, session, Base, engine
 from models.dog import Dog
 from models.owner import Owner
 from models.vet import Vet
@@ -6,10 +6,11 @@ from models.rescue_center import RescueCenter
 from models.appointment import Appointment
 from datetime import datetime
 
-# Create all tables
-Base.metadata.create_all(engine)
 
-# Sample entries
+#Create tables if they don't exist
+Base.metadata.create_all(bind=engine)
+
+# Sample entries(add your seed data)
 owner1 = Owner(name="Jane Doe", contact="0700123456")
 vet1 = Vet(name="Dr. Smith", clinic="Happy Paws Vet", contact="0734567890")
 rescue1 = RescueCenter(name="Hope Rescue", location="Nairobi", contact="0711122233")

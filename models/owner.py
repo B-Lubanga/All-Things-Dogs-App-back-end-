@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base
+from sqlalchemy import Column, Integer, String
+
 
 class Owner(Base):
     __tablename__ = 'owners'
@@ -8,5 +9,6 @@ class Owner(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     contact = Column(String)
+    location = Column(String)
 
     dog = relationship('Dog', back_populates='owner', uselist=False)
