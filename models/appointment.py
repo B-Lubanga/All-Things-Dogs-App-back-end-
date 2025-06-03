@@ -16,5 +16,5 @@ class Appointment(Base):
     dog_id = Column(Integer, ForeignKey('dogs.id'))
     vet_id = Column(Integer, ForeignKey('vets.id'))
 
-    dog = relationship(Dog, back_populates='appointments')
-    vet = relationship(Vet, back_populates='appointments')
+    dog = relationship("Dog", back_populates='appointments')
+    vet = relationship("Vet", back_populates='appointments')

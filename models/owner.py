@@ -1,6 +1,7 @@
 from sqlalchemy.orm import relationship
-from database import Base
 from sqlalchemy import Column, Integer, String
+from database import session
+from database import Base
 
 
 class Owner(Base):
@@ -11,4 +12,18 @@ class Owner(Base):
     contact = Column(String)
     location = Column(String)
 
-    dog = relationship('Dog', back_populates='owner', uselist=False)
+    # def __init__(self, name, contact, location):
+    #     self.name = name
+    #     self.contact = contact
+    #     self.location = location
+
+# # Function to add a new owner
+# def add_owner(name, contact, location):
+#     new_owner = Owner(name=name, contact=contact, location=location)
+#     session.add(new_owner)
+#     session.commit()
+Owner.dogs = relationship('Dog', back_populates='owner')
+
+
+
+
