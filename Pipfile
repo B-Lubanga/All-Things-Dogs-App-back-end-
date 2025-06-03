@@ -6,8 +6,9 @@ name = "pypi"
 [packages]
 pipenv = "*"
 shell = "*"
-sqlalchemy = "*"
 ipython = "*"
+sqlalchemy = "*"
+alembic = "*"
 
 [dev-packages]
 
