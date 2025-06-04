@@ -39,7 +39,7 @@ def menu():
             print("❌ Invalid option. Please try again.")
 
 
-# ---------- Add Dog with Owner, Vet, Rescue Center ----------
+# Here is where to Add Dog with Owner, Vet, Rescue Center 
 def add_dog():
     session = db_session()
 
@@ -51,7 +51,7 @@ def add_dog():
     gender = input("Gender: ")
     purpose = input("Purpose (adoption/rescue/sale): ")
 
-    # --- Owner Section ---
+    # Owner Section
     owner_query = input("Enter part of owner's name to search or type 'new': ")
     if owner_query.lower() == "new":
         owner_name = input("Owner's name: ")
@@ -66,18 +66,18 @@ def add_dog():
             print("❌ No matching owners found.")
             return
         print("\nMatching Owners:")
-        for idx, o in enumerate(owners):
-            print(f"{idx + 1}. {o.name} - {o.contact} - {o.location}")
+        for index, owner in enumerate(owners):
+            print(f"{index + 1}. {owner.name} - {owner.contact} - {owner.location}")
         choice = int(input("Choose owner by number: ")) - 1
         owner = owners[choice]
 
-    # --- Vet Section ---
-    vet = choose_from_search(session, Vet, "name", ["name", "specialty"], "Vet")
+    # Vet Section
+    vet = choose_from_search(session, Vet, "name", ["name", "location"], "Vet")
 
-    # --- Rescue Center Section ---
+    # Rescue Center Section
     rescue_center = choose_from_search(session, RescueCenter, "name", ["name", "location"], "Rescue Center")
 
-    # --- Save Dog ---
+    # Save Dog 
     dog = Dog(
         name=name,
         breed=breed,
@@ -95,7 +95,7 @@ def add_dog():
     print(f"✅ Dog '{name}' registered successfully!")
 
 
-# ---------- Helper: Choose from Model by Name ----------
+# Helper: Choose from Model by Name 
 def choose_from_search(session, model, field, display_fields, label):
     query = input(f"Enter part of {label}'s name (or leave blank to skip): ")
     if not query:
@@ -106,9 +106,9 @@ def choose_from_search(session, model, field, display_fields, label):
         return None
 
     print(f"\nMatching {label}s:")
-    for idx, item in enumerate(results):
+    for index, item in enumerate(results):
         info = " - ".join([str(getattr(item, f)) for f in display_fields])
-        print(f"{idx + 1}. {info}")
+        print(f"{index + 1}. {info}")
     try:
         choice = int(input(f"Choose {label} by number: ")) - 1
         return results[choice] if 0 <= choice < len(results) else None
@@ -117,7 +117,7 @@ def choose_from_search(session, model, field, display_fields, label):
         return None
 
 
-# ---------- Search Dogs ----------
+# Search Dogs 
 def search_dogs():
     breed = input("Enter breed to search (or leave blank): ").strip()
     location = input("Enter location to search (or leave blank): ").strip()
@@ -142,23 +142,39 @@ def search_dogs():
         print("❌ No dogs found matching your criteria.")
 
 
-# ---------- Assign Vet ----------
+# Assign Vet 
 def assign_vet():
     session = db_session()
-    dog_name = input("Enter dog name to assign vet: ")
-    dog = session.query(Dog).filter(Dog.name.ilike(f"%{dog_name}%")).first()
-    if not dog:
-        print("❌ Dog not found.")
+
+    dog_name = input("Enter dog name to assign vet: ").strip()
+    dogs = session.query(Dog).filter(Dog.name.ilike(f"%{dog_name}%")).all()
+
+    if not dogs:
+        print("❌ No dogs found.")
         return
 
-    vet = choose_from_search(session, Vet, "name", ["name", "specialty"], "Vet")
-    if vet:
+    print("\nMatching Dogs:")
+    for dog in dogs:
+        print(f"{dog.id}: {dog.name} ({dog.breed}) in {dog.location}")
+
+    try:
+        dog_id = int(input("Enter Dog ID to assign vet: "))
+        dog = session.get(Dog, dog_id)
+    except:
+        print("Invalid dog ID.")
+        return
+
+    # Search and choose vet
+    vet = choose_from_search(session, Vet, "name", ["name", "location"], "Vet")
+    
+    if dog and vet:
         dog.vet = vet
         session.commit()
-        print(f"✅ Assigned Vet '{vet.name}' to Dog '{dog.name}'")
+        print(f"✅ Assigned Vet {vet.name} to Dog {dog.name}")
+    else:
+        print("❌ Assignment failed.")
 
-
-# ---------- List All Data ----------
+# List All Data
 def list_dogs():
     session = db_session()
     dogs = session.query(Dog).all()
@@ -166,11 +182,11 @@ def list_dogs():
         print("📭 No dogs registered yet.")
         return
     print("\n🐶 All Registered Dogs:")
-    for d in dogs:
-        owner_info = f"{d.owner.name}" if d.owner else "None"
-        vet_info = f"{d.vet.name}" if d.vet else "None"
-        rc_info = f"{d.rescue_center.name}" if d.rescue_center else "None"
-        print(f"- {d.name} | {d.breed} | {d.location} | Owner: {owner_info} | Vet: {vet_info} | RC: {rc_info}")
+    for dog in dogs:
+        owner_info = f"{dog.owner.name}" if dog.owner else "None"
+        vet_info = f"{dog.vet.name}" if dog.vet else "None"
+        rescue_center_info = f"{dog.rescue_center.name}" if dog.rescue_center else "None"
+        print(f"- {dog.name} | {dog.breed} | {dog.location} | Owner: {owner_info} | Vet: {vet_info} | RC: {rescue_center_info}")
 
 
 def list_vets():
@@ -180,8 +196,8 @@ def list_vets():
         print("📭 No vets available.")
         return
     print("\n🩺 Vet Clinics:")
-    for v in vets:
-        print(f"- {v.name} | Location: {v.location}")
+    for vet in vets:
+        print(f"- {vet.name} | Location: {vet.location}")
 
 
 def list_rescue_centers():
@@ -191,8 +207,8 @@ def list_rescue_centers():
         print("📭 No rescue centers found.")
         return
     print("\n🏡 Rescue Centers:")
-    for rc in centers:
-        print(f"- {rc.name} | Location: {rc.location}")
+    for rescue_center in centers:
+        print(f"- {rescue_center.name} | Location: {rescue_center.location}")
 
 
 if __name__ == '__main__':

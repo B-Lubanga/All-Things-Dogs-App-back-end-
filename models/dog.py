@@ -16,7 +16,7 @@ class Dog(Base):
     breed = Column(String)
     age = Column(String)
     gender = Column(String)
-    purpose = Column(String) # adoption, rescued, sale 
+    purpose = Column(String) 
     location = Column(String)
 
     owner_id = Column(Integer, ForeignKey('owners.id'),nullable=False)
@@ -26,5 +26,5 @@ class Dog(Base):
     owner = relationship('Owner', back_populates='dogs')
     vet = relationship('Vet', back_populates='dogs')
     rescue_center = relationship('RescueCenter', back_populates='dogs', lazy='joined')
-    appointments = relationship('Appointment', back_populates='dog')
+    appointments = relationship('Appointment', back_populates='dog', cascade="all, delete-orphan")
 
