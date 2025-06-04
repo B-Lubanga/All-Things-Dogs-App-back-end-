@@ -4,6 +4,10 @@
 
 This is a command-line interface (CLI) application for managing a Dog Adoption platform. It allows users to interact with dog adoption data, rescue centers, dog owners, and veterinarians through a Python CLI backed by a SQLAlchemy ORM and SQLite database.
 
+This is a brief description of the project.
+
+<img src="assets/Schemer%20diagram.png" alt="Schemer Diagram">
+
 ## Features
 
 - View and manage adoptable dogs, rescue dogs, or dogs for sale
